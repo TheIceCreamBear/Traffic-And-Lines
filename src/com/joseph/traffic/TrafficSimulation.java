@@ -9,6 +9,7 @@ import java.awt.geom.QuadCurve2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -16,6 +17,7 @@ import com.joseph.traffic.io.user.KeyHandler;
 import com.joseph.traffic.io.user.MouseHandler;
 import com.joseph.traffic.lanes.OldCurvedLane;
 import com.joseph.traffic.lanes.OldStraightLane;
+import com.joseph.traffic.lanes.StraightLane;
 import com.joseph.traffic.objects.Car;
 import com.joseph.traffic.roads.OldCurvedRoad;
 import com.joseph.traffic.roads.OldStraightRoad;
@@ -75,6 +77,8 @@ public class TrafficSimulation implements IGameController {
 	Car car3 = new Car(verticalRoad1.getBackward()[0]);
 	Car car4 = new Car(verticalRoad1.getBackward()[1]);
 	Car car5 = new Car(verticalRoad1.getBackward()[2]);
+	
+	public static ArrayList<StraightLane> lanes = new ArrayList<StraightLane>();
 	
 	@Override
 	public void initialize() {
@@ -261,6 +265,10 @@ public class TrafficSimulation implements IGameController {
 				croad2.drawRoad(g);
 				croad3.drawRoad(g);
 				croad4.drawRoad(g);
+		}
+		
+		for (StraightLane lane : lanes) {
+			lane.drawLane(g);
 		}
 		
 		
