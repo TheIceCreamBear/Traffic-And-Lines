@@ -15,6 +15,9 @@ public class StraightLane implements ILane {
 	private double direction;
 	private double length;
 	
+	// TODO remake next system to allow multiple
+	private ILane next;
+	
 	/**
 	 * Constructs a new straight lane from the given points. The given start and end 
 	 * points are the actual points of the lane and not on the boundary of the lane.
@@ -110,14 +113,12 @@ public class StraightLane implements ILane {
 	
 	@Override
 	public ILane getNextLane() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.next;
 	}
 	
 	@Override
 	public void setNextLane(ILane lane) {
-		// TODO Auto-generated method stub
-		
+		this.next = lane;
 	}
 	
 	@Override

@@ -13,6 +13,9 @@ public class CurvedLane implements ILane {
 	private Point2D end;
 	private Point2D control;
 	private double length;
+
+	// TODO remake next system to allow multiple
+	private ILane next;
 	
 	/**
 	 * Constructs a new curved lane by finding the intersection between the two given straight lanes
@@ -247,14 +250,12 @@ public class CurvedLane implements ILane {
 	
 	@Override
 	public ILane getNextLane() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.next;
 	}
 	
 	@Override
 	public void setNextLane(ILane lane) {
-		// TODO Auto-generated method stub
-		
+		this.next = lane;
 	}
 	
 	@Override
