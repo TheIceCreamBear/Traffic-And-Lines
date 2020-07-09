@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Point2D;
 import java.awt.geom.QuadCurve2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -15,6 +16,7 @@ import javax.imageio.ImageIO;
 
 import com.joseph.traffic.io.user.KeyHandler;
 import com.joseph.traffic.io.user.MouseHandler;
+import com.joseph.traffic.lanes.CurvedLane;
 import com.joseph.traffic.lanes.OldCurvedLane;
 import com.joseph.traffic.lanes.OldStraightLane;
 import com.joseph.traffic.lanes.StraightLane;
@@ -71,12 +73,22 @@ public class TrafficSimulation implements IGameController {
 	OldCurvedRoad croad3 = new OldCurvedRoad(horizontalRoad2, verticalRoad2, false, false);
 	OldCurvedRoad croad4 = new OldCurvedRoad(verticalRoad1, horizontalRoad2, true, true);
 	
+	StraightLane nsl1 = new StraightLane(new Point2D.Double(800, 800), new Point2D.Double(1200, 800));
+	StraightLane nsl2 = new StraightLane(new Point2D.Double(1200 + 32, 800 - 32), StrictMath.toRadians(-120), 400);
+	StraightLane nsl3 = new StraightLane(new Point2D.Double(1000, (800 - 32) + (400 * StrictMath.sin(StrictMath.toRadians(-120)))), StrictMath.toRadians(120), 400);
+	
+	CurvedLane ncl1 = new CurvedLane(nsl1, nsl2);
+	CurvedLane ncl2 = new CurvedLane(nsl2, nsl3);
+	CurvedLane ncl3 = new CurvedLane(nsl3, nsl1);
+	
 	Car car0 = new Car(vertical1);
 	Car car1 = new Car(verticalRoad1.getForward()[0]);
 	Car car2 = new Car(verticalRoad1.getForward()[1]);
 	Car car3 = new Car(verticalRoad1.getBackward()[0]);
 	Car car4 = new Car(verticalRoad1.getBackward()[1]);
 	Car car5 = new Car(verticalRoad1.getBackward()[2]);
+	
+	Car car6 = new Car(nsl1);
 	
 	public static ArrayList<StraightLane> lanes = new ArrayList<StraightLane>();
 	
@@ -102,6 +114,14 @@ public class TrafficSimulation implements IGameController {
 		curve3.setNextLane(vertical2);
 		vertical2.setNextLane(curve4);
 		curve4.setNextLane(horizontal1);
+		
+		nsl1.setNextLane(ncl1);
+		ncl1.setNextLane(nsl2);
+		nsl2.setNextLane(ncl2);
+		ncl2.setNextLane(nsl3);
+		nsl3.setNextLane(ncl3);
+		ncl3.setNextLane(nsl1);
+		
 		
 		for (int i = 0; i < 2; i++) {
 			verticalRoad1.getForward()[i].setNextLane(croad1.getForward()[i]);
@@ -178,6 +198,7 @@ public class TrafficSimulation implements IGameController {
 			car3.update(u);
 			car4.update(u);
 			car5.update(u);
+			car6.update(u);
 		}
 		ticks++;
 	}
@@ -271,6 +292,14 @@ public class TrafficSimulation implements IGameController {
 			lane.drawLane(g);
 		}
 		
+		nsl1.drawLane(g);
+		nsl2.drawLane(g);
+		nsl3.drawLane(g);
+		
+		ncl1.drawLane(g);
+		ncl2.drawLane(g);
+		ncl3.drawLane(g);
+		
 		
 		car0.drawCar(g);
 		car1.drawCar(g);
@@ -278,5 +307,6 @@ public class TrafficSimulation implements IGameController {
 		car3.drawCar(g);
 		car4.drawCar(g);
 		car5.drawCar(g);
+		car6.drawCar(g);
 	}
 }
