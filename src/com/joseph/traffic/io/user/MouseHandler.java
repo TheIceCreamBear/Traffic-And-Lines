@@ -3,11 +3,13 @@ package com.joseph.traffic.io.user;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 
 import com.joseph.traffic.TrafficSimulation;
 import com.joseph.traffic.lanes.StraightLane;
 import com.projecttriumph.engine.api.io.user.IGameMouseInputHandler;
+import com.projecttriumph.engine.rendering.ScreenManager;
 
 public class MouseHandler implements IGameMouseInputHandler {
 	private Point mouseDown;
@@ -19,12 +21,24 @@ public class MouseHandler implements IGameMouseInputHandler {
 	public void mouseClicked(MouseEvent e) {
 		if (!firstPoint) {
 			firstPoint = true;
-			Point p = e.getPoint();
-			lane = new StraightLane(new Point2D.Double(p.x, p.y), new Point2D.Double(p.x, p.y));
-			TrafficSimulation.lanes.add(lane);
+			Point2D p = e.getPoint();
+			try {
+				p = ScreenManager.getInstance().getCamera().getCurrentTransform().inverseTransform(p, null);
+			} catch (NoninvertibleTransformException ex) {
+				ex.printStackTrace();
+			}
+			lane = new StraightLane(new Point2D.Double(p.getX(), p.getY()), new Point2D.Double(p.getX(), p.getY()));
+			synchronized (TrafficSimulation.lanes) {				
+				TrafficSimulation.lanes.add(lane);
+			}
 		} else {
-			Point p = e.getPoint();
-			lane.updateSecondPoint(new Point2D.Double(p.x, p.y));
+			Point2D p = e.getPoint();
+			try {
+				p = ScreenManager.getInstance().getCamera().getCurrentTransform().inverseTransform(p, null);
+			} catch (NoninvertibleTransformException ex) {
+				ex.printStackTrace();
+			}
+			lane.updateSecondPoint(new Point2D.Double(p.getX(), p.getY()));
 			firstPoint = false;
 		}
 	}
@@ -57,8 +71,13 @@ public class MouseHandler implements IGameMouseInputHandler {
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		if (firstPoint) {
-			Point p = e.getPoint();
-			lane.updateSecondPoint(new Point2D.Double(p.x, p.y));
+			Point2D p = e.getPoint();
+			try {
+				p = ScreenManager.getInstance().getCamera().getCurrentTransform().inverseTransform(p, null);
+			} catch (NoninvertibleTransformException ex) {
+				ex.printStackTrace();
+			}
+			lane.updateSecondPoint(new Point2D.Double(p.getX(), p.getY()));
 		}
 	}
 
