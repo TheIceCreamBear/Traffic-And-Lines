@@ -38,9 +38,21 @@ public class TrafficSimulation implements IGameController {
 	
 	private BufferedImage bi;
 	
+	{
+//		System.out.println("TrafficSimulation.enclosing_method()");
+//		try {
+//			throw new Exception();			
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+	}
+	
 	private long ticks = 0;
 	
 	boolean u = true;
+	boolean n = true;
+	
+	int nc = 5;
 	
 	int amount = -1;
 	
@@ -91,6 +103,7 @@ public class TrafficSimulation implements IGameController {
 	Car car6 = new Car(nsl1);
 	
 	public static ArrayList<StraightLane> lanes = new ArrayList<StraightLane>();
+	public static ArrayList<Car> cars = new ArrayList<Car>();
 	
 	@Override
 	public void initialize() {
@@ -174,6 +187,9 @@ public class TrafficSimulation implements IGameController {
 		if (KeyInputHandler.wasKeyPressedThisFrame(KeyEvent.VK_P)) {
 			u = !u;
 		}
+		if (KeyInputHandler.wasKeyPressedThisFrame(KeyEvent.VK_N)) {
+			n = !n;
+		}
 		if (KeyInputHandler.wasKeyPressedThisFrame(KeyEvent.VK_1)) {
 			car0.forward();
 		}
@@ -190,8 +206,20 @@ public class TrafficSimulation implements IGameController {
 		if (KeyInputHandler.isKeyDown(KeyEvent.VK_5)) {
 			car5.update(true);
 		}
-		
+				
 		if (ticks > 141) {
+			if (n) {
+				nc--;
+				if (nc == 0) {
+					cars.add(new Car(nsl1));
+					nc = 5;
+				}
+			}
+			
+			for (Car car : cars) {
+				car.update(true);
+			}
+			
 			car0.update(u);
 			car1.update(u);
 			car2.update(u);
@@ -199,6 +227,7 @@ public class TrafficSimulation implements IGameController {
 			car4.update(u);
 			car5.update(u);
 			car6.update(u);
+			
 		}
 		ticks++;
 	}
@@ -288,8 +317,10 @@ public class TrafficSimulation implements IGameController {
 				croad4.drawRoad(g);
 		}
 		
-		for (StraightLane lane : lanes) {
-			lane.drawLane(g);
+		synchronized (lanes) {			
+			for (StraightLane lane : lanes) {
+				lane.drawLane(g);
+			}
 		}
 		
 		nsl1.drawLane(g);
@@ -300,6 +331,11 @@ public class TrafficSimulation implements IGameController {
 		ncl2.drawLane(g);
 		ncl3.drawLane(g);
 		
+		for (Car car : cars) {
+			car.drawCar(g);
+		}
+		
+		g.drawString("" + cars.size(), 1000, 600);
 		
 		car0.drawCar(g);
 		car1.drawCar(g);
