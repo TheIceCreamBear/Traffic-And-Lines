@@ -6,8 +6,10 @@ import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 
 import com.joseph.traffic.lanes.ILane;
+import com.projecttriumph.engine.io.file.ImageHelper;
 
 public class Car {
 	private static final int SPEED = 4; // pixels per tick
@@ -15,6 +17,7 @@ public class Car {
 	private final Polygon shape = new Polygon(new int[] {-6, 5, 5, -6, -6, 5, 5, -6, -6}, new int[] {-3, -3, 1, 1, 12, 12, -8, -8, 1}, 9);
 	private final Point[] shapePoints;
 	private Point[] drawPoints;
+	private BufferedImage i;
 	private int x;
 	private int y;
 	private double rotation;
@@ -29,12 +32,24 @@ public class Car {
 		this.maxRoadTravelLength = road.getLength();
 		this.currentRoad = road;
 		this.currentRoadTravled = 0;
+		// old
 		this.shapePoints = new Point[shape.npoints];
 		this.drawPoints = new Point[shapePoints.length];
 		for (int i = 0; i < shapePoints.length; i++) {
 			shapePoints[i] = new Point(shape.xpoints[i], shape.ypoints[i]);
 			drawPoints[i] = new Point(shape.xpoints[i], shape.ypoints[i]);
 		}
+		// load image
+		try {
+			i = ImageHelper.readImageFromClassPath("resources/car.png");
+			if (i == null) {
+				throw new Exception("uhhh what");
+			}
+		} catch (Exception e) {
+			System.err.println("Failed to load car image");
+			e.printStackTrace();
+		}
+		
 		f = true;
 	}
 	
@@ -66,14 +81,22 @@ public class Car {
 	}
 	
 	public void drawCar(Graphics2D g) {
-		g.setColor(Color.RED);
-		g.drawPolygon(makePoly(drawPoints));
+		g.drawImage(i, this.getDrawTransform(), null);
+//		g.setColor(Color.RED);
+//		g.drawPolygon(makePoly(drawPoints));
 //		if (this.currentRoad != null) {
 //			this.currentRoad.drawLane(g);
 //			if (this.currentRoad.getNextLane() != null) {
 //				this.currentRoad.getNextLane().drawLane(g);
 //			}
 //		}
+	}
+	
+	private AffineTransform getDrawTransform() {
+		AffineTransform at = new AffineTransform();
+		at.translate(x - i.getWidth() / 2, y - i.getHeight() / 2);
+		at.rotate(rotation + rad90, i.getWidth() / 2, i.getHeight() / 2);
+		return at;
 	}
 	
 	private void rotatePoints() {
