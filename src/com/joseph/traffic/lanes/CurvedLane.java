@@ -82,11 +82,11 @@ public class CurvedLane implements ILane {
 			m2 = m2Top / m2Bottom;
 		}
 		
-		System.out.println("================================================================");
-		System.out.println("Curved Line post Initial Calculation");
-		System.out.println("Points: " + end1 + start2);
-		System.out.println("Slopes: " + m1 + "   " + m2);
-		System.out.println("x:" + x + " y:" + y);
+//		System.out.println("================================================================");
+//		System.out.println("Curved Line post Initial Calculation");
+//		System.out.println("Points: " + end1 + start2);
+//		System.out.println("Slopes: " + m1 + "   " + m2);
+//		System.out.println("x:" + x + " y:" + y);
 		
 		if (m1 != Double.POSITIVE_INFINITY && m2 != Double.POSITIVE_INFINITY) {
 			// calculate x and y based off of two line equation
@@ -118,7 +118,6 @@ public class CurvedLane implements ILane {
 					// vertical cross with angled
 					y = m1 * (x - start1.getX()) + start1.getY();
 				} else if (x == Double.POSITIVE_INFINITY && y != Double.POSITIVE_INFINITY) {
-					System.out.println("CurvedLane.CurvedLane(m1!=)");
 					// horizontal cross with angled
 					x = (y - start1.getY()) / m1 + start1.getX();
 				} else if (x == Double.POSITIVE_INFINITY && y == Double.POSITIVE_INFINITY) {
@@ -155,10 +154,10 @@ public class CurvedLane implements ILane {
 				}
 			}
 		}
-		System.out.println("-------------------------------------------------");
-		System.out.println("Curved Line post Calculation");
-		System.out.println("x:" + x + " y:" + y);
-		System.out.println("================================================================");
+//		System.out.println("-------------------------------------------------");
+//		System.out.println("Curved Line post Calculation");
+//		System.out.println("x:" + x + " y:" + y);
+//		System.out.println("================================================================");
 		
 		// init actual lane
 		this.start = start.getLaneEndLocation();
