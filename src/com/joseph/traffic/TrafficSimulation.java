@@ -29,7 +29,7 @@ import com.projecttriumph.engine.api.game.IGameController;
 import com.projecttriumph.engine.io.user.KeyInputHandler;
 import com.projecttriumph.engine.rendering.ScreenManager;
 
-@Game(gameID = "traffic-simulator", gameName = "Traffic Simulator", keyInput = KeyHandler.class, mouseInput = MouseHandler.class, version = "0.0.1", camera = TSCTEMP.class)
+@Game(gameID = "traffic-simulator", gameName = "Traffic Simulator", keyInput = KeyHandler.class, mouseInput = MouseHandler.class, version = "0.0.1", camera = LinearLeveledScaleCamera.class)
 public class TrafficSimulation implements IGameController {
 	
 	private BasicStroke dashed;
